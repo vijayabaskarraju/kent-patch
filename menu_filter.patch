@@ -1,0 +1,31 @@
+diff --git a/menu_ui/src/MenuListBuilder.php b/menu_ui/src/MenuListBuilder.php
+index aa85d4d..3cbc967 100644
+--- a/menu_ui/src/MenuListBuilder.php
++++ b/menu_ui/src/MenuListBuilder.php
+@@ -18,11 +18,15 @@ class MenuListBuilder extends ConfigEntityListBuilder {
+    * {@inheritdoc}
+    */
+   protected function getEntityIds() {
++    $request = \Drupal::request();
++    $search = $request->get('search') ?? '';
+     $query = $this
+       ->getStorage()
+       ->getQuery()
+       ->sort('label', 'ASC');
+-
++    if ($search) {
++      $query->condition('label', $search, 'CONTAINS');
++    }
+     // Only add the pager if a limit is specified.
+     if ($this->limit) {
+       $query->pager($this->limit);
+@@ -91,7 +95,8 @@ class MenuListBuilder extends ConfigEntityListBuilder {
+    * {@inheritdoc}
+    */
+   public function render() {
+-    $build = parent::render();
++    $build['form'] = \Drupal::formBuilder()->getForm('Drupal\kent_state_utilities\Form\MenuSearchOptionForm');
++    $build += parent::render();
+     $build['#attached']['library'][] = "menu_ui/drupal.menu_ui.adminforms";
+     return $build;
+   }
