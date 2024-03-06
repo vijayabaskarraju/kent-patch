@@ -1,0 +1,14 @@
+diff --git a/menu_ui/src/MenuListBuilder.php b/menu_ui/src/MenuListBuilder.php
+index aa85d4d..5f8e31f 100644
+--- a/menu_ui/src/MenuListBuilder.php
++++ b/menu_ui/src/MenuListBuilder.php
+@@ -91,7 +91,8 @@ class MenuListBuilder extends ConfigEntityListBuilder {
+    * {@inheritdoc}
+    */
+   public function render() {
+-    $build = parent::render();
++    $build['form'] = \Drupal::formBuilder()->getForm('Drupal\kent_state_utilities\Form\MenuSearchOptionForm');
++    $build += parent::render();
+     $build['#attached']['library'][] = "menu_ui/drupal.menu_ui.adminforms";
+     return $build;
+   }

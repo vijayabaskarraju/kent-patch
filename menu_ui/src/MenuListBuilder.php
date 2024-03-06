@@ -18,11 +18,15 @@ class MenuListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   protected function getEntityIds() {
+    $request = \Drupal::request();
+    $search = $request->get('search') ?? '';
     $query = $this
       ->getStorage()
       ->getQuery()
       ->sort('label', 'ASC');
-
+    if ($search) {
+      $query->condition('label', $search, 'CONTAINS');
+    }
     // Only add the pager if a limit is specified.
     if ($this->limit) {
       $query->pager($this->limit);
